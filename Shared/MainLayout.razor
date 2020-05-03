@@ -1,0 +1,43 @@
+﻿@inherits LayoutComponentBase
+@inject IBootstrapCss BootstrapCss
+@using BlazorStrap
+@using BlazorDateRangePicker
+
+<div class="sidebar  bg-dark" style="overflow-y: auto">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4">
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+
+
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+
+
+@code {
+    private bool hasBeendone = false;
+
+
+    protected override async Task OnAfterRenderAsync(bool firsttime)
+    {
+        if (!hasBeendone)
+        {
+            await BootstrapCss.SetBootstrapCss(Theme.Cerulean, "4.3.1");
+            hasBeendone = true;
+        }
+    }
+
+
+    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+
+    public void OnRangeSelect(DateRange range)
+    {
+    }
+}
