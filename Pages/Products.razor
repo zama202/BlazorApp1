@@ -1,0 +1,98 @@
+﻿@page "/products"
+@using BlazorApp1.Data
+@using BlazorApp1.Model
+@inherits ProductsBase;
+
+<h1>Product Crud</h1>
+
+@if (products == null)
+{
+    <!-- Show this if the current user has no data... yet... -->
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!-- Show the products for the current user -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Code</th>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Date</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in products)
+            {
+                <tr>
+                    <td>@product.ProductionId</td>
+                    <td>@product.ProductCode</td>
+                    <td>@product.ProductDescription</td>
+                    <td>@product.ProductQuantity</td>
+                    <td>@product.ProductDate.ToShortDateString()</td>
+                    <td>
+                        <!-- Edit the current forecast -->
+                        <button class="btn btn-primary"
+                                @onclick="(() => EditProduct(product))">
+                            Edit
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        <!-- Add a new forecast -->
+        <button class="btn btn-primary"
+                @onclick="AddNewProduct">
+            Add New Product
+        </button>
+    </p>
+    @if (ShowPopup)
+    {
+        <!-- This is the popup to create or edit a forecast -->
+        <div class="modal" tabindex="-1" style="display:block" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Edit Product</h3>
+                        <!-- Button to close the popup -->
+                        <button type="button" class="close" @onclick="ClosePopup">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <!-- Edit form for the current forecast -->
+                    <div class="modal-body">
+                        <input class="form-control" type="text" placeholder="Product Code" @bind="objProduct.ProductCode" />
+                        <input class="form-control" type="text" placeholder="Product Description" @bind="objProduct.ProductDescription" />
+                        <input class="form-control" type="text" placeholder="Product Quantity" @bind="objProduct.ProductQuantity" />
+                        <input class="form-control" type="text" placeholder="Product Date" @bind="objProduct.ProductDate" />
+                        <br />
+                        <!-- Button to save the forecast -->
+                        <button class="btn btn-primary" @onclick="SaveProduct"> Save </button>
+                        <!-- Only show delete button if not a new record -->
+                        @if (objProduct.ProductionId > 0)
+                        {
+                            <!-- Button to delete the forecast -->
+                            <button class="btn btn-primary" @onclick="DeleteProduct">
+                                Delete
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+}
+
+@code {
+
+
+
+
+}

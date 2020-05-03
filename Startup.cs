@@ -14,6 +14,8 @@ using BlazorStrap;
 using BlazorApp1.SignalR;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Azure.SignalR;
+using BlazorApp1.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp1
 {
@@ -42,7 +44,8 @@ namespace BlazorApp1
 
             //InLOCALE
             services.AddSignalR();
-            
+            services.AddDbContext<SqlDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("SqlDbContext")));
             services.AddControllersWithViews();
             services.AddResponseCompression(opts =>
             {
@@ -54,6 +57,7 @@ namespace BlazorApp1
             services.AddServerSideBlazor();
             services.AddBootstrapCss();
             services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<ProductService>();
             services.AddSingleton<AlertService>();
             services.AddSingleton<NotificationService>();
 
