@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlazorApp1.Model;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Logging;
 
@@ -28,12 +29,24 @@ namespace BlazorApp1.SignalR
             await base.OnConnectedAsync();
         }
 
-        public async Task BroadcastMethod(string from, string message)
+        public async Task SendTwinUpdate(string action, Event eventArg)
         {
-            Console.WriteLine("IOPPOORRZ");
-            _logger.LogInformation($"{from} broadcasts message: {message}");
-            await Clients.All.SendAsync("BroadcastMethodReceived", from, message);
+            await Clients.All.SendAsync("UpdateTwin", action, eventArg);
         }
+        public async Task SendAlertsUpdate(string action, Event eventArg)
+        {
+            await Clients.All.SendAsync("UpdateAlerts", action, eventArg);
+        }
+        public async Task SendTelemetryUpdate(string action, Event eventArg)
+        {
+            await Clients.All.SendAsync("UpdateTelemetry", action, eventArg);
+        }
+        public async Task SendStatisticsUpdate(string action, Event eventArg)
+        {
+            await Clients.All.SendAsync("UpdateStatistics", action, eventArg);
+        }
+
+
     }
 }
 

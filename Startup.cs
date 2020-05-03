@@ -33,15 +33,15 @@ namespace BlazorApp1
 
             //AZURE SIGNALR SERVICE
             //bisogna installare nuget Microsoft.Azure.SignalR
-            services.AddSignalR().AddAzureSignalR(config =>
-            {
-                config.ServerStickyMode = ServerStickyMode.Required;
-                config.ConnectionString = "Endpoint=https://demobrainkin.service.signalr.net;AccessKey=1UymyA/+halds47Vk7BxiF62dcSf5prARsjY0hIBqdk=;Version=1.0;";
-            });
+            //services.AddSignalR().AddAzureSignalR(config =>
+            //{
+            //    config.ServerStickyMode = ServerStickyMode.Required;
+            //    config.ConnectionString = "Endpoint=https://demobrainkin.service.signalr.net;AccessKey=1UymyA/+halds47Vk7BxiF62dcSf5prARsjY0hIBqdk=;Version=1.0;";
+            //});
 
 
             //InLOCALE
-            //services.AddSignalR();
+            services.AddSignalR();
             
             services.AddControllersWithViews();
             services.AddResponseCompression(opts =>
@@ -54,7 +54,8 @@ namespace BlazorApp1
             services.AddServerSideBlazor();
             services.AddBootstrapCss();
             services.AddSingleton<WeatherForecastService>();
-            services.AddScoped<NotificationService>();
+            services.AddSingleton<AlertService>();
+            services.AddSingleton<NotificationService>();
 
         }
 
@@ -78,16 +79,16 @@ namespace BlazorApp1
             app.UseRouting();
 
             //AZURE SIGNALR SERVICE
-            app.UseAzureSignalR(routes =>
-            {
-                routes.MapHub<NotificationHub>("/NotificationHub");
-            });
+            //app.UseAzureSignalR(routes =>
+            //{
+            //    routes.MapHub<NotificationHub>("/NotificationHub");
+            //});
 
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-                //endpoints.MapHub<NotificationHub>("/NotificationHub");
+                endpoints.MapHub<NotificationHub>("/NotificationHub");
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

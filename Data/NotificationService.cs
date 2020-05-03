@@ -9,22 +9,33 @@ namespace BlazorApp1.Data
 {
     public class NotificationService
     {
-        HubConnection _connection;
+        public HubConnection Connection { get; set; }
 
         public async Task ConnectAsync()
         {
-            _connection = new HubConnectionBuilder()
-                .WithUrl("https://localhost:5001/notificationhub")
-                .Build();
-
-            _connection.On<string, string>("BroadcastChannel", (user, message) =>
+            if (null == Connection)
             {
-                this.OnMessage?.Invoke(user, message);
-            });
+                Connection = new HubConnectionBuilder()
+                    .WithUrl("https://localhost:5001/notificationhub")
+                    .Build();
 
-            if (_connection.State != HubConnectionState.Connected)
+                Console.WriteLine("CONNECT FROM STATEFUL SERVICE");
+
+                Connection.On<string, string>("BroadcastChannel", (user, message) =>
+                {
+                    this.OnMessage?.Invoke(user, message);
+                });
+            }
+            else
+            { 
+                Console.WriteLine("ALREADY CONNECTED"); 
+            }
+
+            
+
+            if (Connection.State != HubConnectionState.Connected)
             {
-                await _connection.StartAsync();
+                await Connection.StartAsync();
             }
         }
 
@@ -32,7 +43,7 @@ namespace BlazorApp1.Data
 
         public async Task BroadcastAsync(string sender, string message)
         {
-            await _connection.InvokeAsync("Broadcast", sender, message);
+            await Connection.InvokeAsync("Broadcast", sender, message);
         }
     }
 }
